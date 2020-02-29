@@ -11,6 +11,8 @@ public class Grid : MonoBehaviour
     private int gridSizeX;
     private int gridSizeY;
 
+    public int gridMaxSize;
+
     private float nodeDiameter;
 
     public LayerMask nonWalkableLayerMask;
@@ -22,6 +24,7 @@ public class Grid : MonoBehaviour
         nodeDiameter = 2 * nodeRadius;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
+        gridMaxSize = gridSizeX * gridSizeY;
         grid = new Node[gridSizeX, gridSizeY];
         CreateGrid();
     }

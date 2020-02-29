@@ -235,7 +235,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 810246578}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.2, y: 0, z: 10.4}
+  m_LocalPosition: {x: 20, y: 0, z: 20.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1383159183}
@@ -413,7 +413,7 @@ Transform:
   m_GameObject: {fileID: 1108196995}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 1, z: 3}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -535,7 +535,7 @@ Transform:
   m_GameObject: {fileID: 1376185448}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5633645, y: 1, z: 1.583615}
   m_Children:
   - {fileID: 1487619127}
   - {fileID: 1120424523}
@@ -724,7 +724,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1487619123}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.56, y: 1.5, z: 7.55}
+  m_LocalPosition: {x: 6.05, y: 1.5, z: 7.55}
   m_LocalScale: {x: 6.8970647, y: 3, z: 5.7372785}
   m_Children: []
   m_Father: {fileID: 1376185449}
@@ -846,7 +846,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618251334}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.66, y: 0, z: -11.62}
+  m_LocalPosition: {x: -21.62, y: 0, z: -21.44}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1646354092}
@@ -1032,7 +1032,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1745975001}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.14, y: 1.5, z: -11.45}
+  m_LocalPosition: {x: 6.14, y: 1.5, z: -9.97}
   m_LocalScale: {x: 10.971161, y: 3, z: 2.093992}
   m_Children: []
   m_Father: {fileID: 1376185449}
@@ -1174,7 +1174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e155ad89a92854c70b4df3f857dd6c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWorldSize: {x: 30, y: 30}
+  gridWorldSize: {x: 50, y: 50}
   nodeRadius: 0.5
   nonWalkableLayerMask:
     serializedVersion: 2

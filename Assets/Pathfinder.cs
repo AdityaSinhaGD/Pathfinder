@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
 
 public class Pathfinder : MonoBehaviour
 {
@@ -17,11 +18,16 @@ public class Pathfinder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //FindPathWithBFS(seeker.position, target.position);
-        FindPathWithAStar(seeker.position, target.position);
+        if (Input.GetMouseButtonDown(0))
+        {
+            //FindPathWithBFS(seeker.position, target.position);
+            FindPathWithAStar(seeker.position, target.position);
+            //FindPathWithAStarHeapTech(seeker.position, target.position);
+        }
+
     }
 
-    private void FindPathWithBFS(Vector3 startPos,Vector3 endPos)
+    private void FindPathWithBFS(Vector3 startPos, Vector3 endPos)
     {
         Node startNode = grid.GetNodeFromWorldPosition(startPos);
         Node endNode = grid.GetNodeFromWorldPosition(endPos);
@@ -35,7 +41,7 @@ public class Pathfinder : MonoBehaviour
         {
             Node currentNode = queue.Dequeue();
 
-            if(currentNode == endNode)
+            if (currentNode == endNode)
             {
                 RetracePath(startNode, endNode);
                 return;
@@ -43,7 +49,7 @@ public class Pathfinder : MonoBehaviour
 
             List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
 
-            foreach(Node node in neighbouringNodes)
+            foreach (Node node in neighbouringNodes)
             {
                 if (node.isWalkable && !exploredSet.Contains(node))
                 {
@@ -55,7 +61,7 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    private void FindPathWithDFS(Vector3 startPos,Vector3 endPos)
+    private void FindPathWithDFS(Vector3 startPos, Vector3 endPos)
     {
         Node startNode = grid.GetNodeFromWorldPosition(startPos);
         Node endNode = grid.GetNodeFromWorldPosition(endPos);
@@ -77,7 +83,7 @@ public class Pathfinder : MonoBehaviour
 
             List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
 
-            foreach(Node node in neighbouringNodes)
+            foreach (Node node in neighbouringNodes)
             {
                 if (node.isWalkable && !exploredSet.Contains(node))
                 {
@@ -89,8 +95,11 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    private void FindPathWithAStar(Vector3 startPos,Vector3 endPos)
+    private void FindPathWithAStar(Vector3 startPos, Vector3 endPos)
     {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         Node startNode = grid.GetNodeFromWorldPosition(startPos);
         Node endNode = grid.GetNodeFromWorldPosition(endPos);
 
@@ -107,8 +116,12 @@ public class Pathfinder : MonoBehaviour
         {
             Node currentNode = GetNodeWithMinimumFCost(openList);
 
-            if(currentNode == endNode)
+            closedList.Add(currentNode);
+
+            if (currentNode == endNode)
             {
+                stopwatch.Stop();
+                print("Path Found:" + stopwatch.ElapsedMilliseconds + "ms");
                 RetracePath(startNode, endNode);
                 return;
             }
@@ -117,22 +130,79 @@ public class Pathfinder : MonoBehaviour
 
             List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
 
-            foreach(Node node in neighbouringNodes)
+            foreach (Node node in neighbouringNodes)
             {
                 if (!node.isWalkable || closedList.Contains(node))
                 {
                     continue;
                 }
 
-                closedList.Add(currentNode);
+                int tentativeGCost = currentNode.gCost + CalculateDistanceBetweenNodes(currentNode, node);
+
+                if (node.gCost > tentativeGCost || !openList.Contains(node))
+                {
+                    node.gCost = tentativeGCost;
+                    node.hCost = CalculateDistanceBetweenNodes(node, endNode);
+                    node.parentNode = currentNode;
+
+                    if (!openList.Contains(node))
+                    {
+                        openList.Add(node);
+                    }
+
+                }
+            }
+        }
+    }
+
+    private void FindPathWithAStarHeapTech(Vector3 startPos, Vector3 endPos)
+    {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        Node startNode = grid.GetNodeFromWorldPosition(startPos);
+        Node endNode = grid.GetNodeFromWorldPosition(endPos);
+
+        Heap nodeHeap = new Heap(grid.gridMaxSize);
+        List<Node> closedList = new List<Node>();
+
+        nodeHeap.Add(startNode);
+        grid.SetInitialGCostForGrid();
+        startNode.gCost = 0;
+
+        while (nodeHeap.noOfElementsInHeap > 0)
+        {
+            Node currentNode = nodeHeap.Remove();
+
+            closedList.Add(currentNode);
+
+            if (currentNode == endNode)
+            {
+                stopwatch.Stop();
+                print("Path Found:" + stopwatch.ElapsedMilliseconds + "ms");
+                RetracePath(startNode, endNode);
+                return;
+            }
+
+            List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
+
+            foreach (Node node in neighbouringNodes)
+            {
+                if (!node.isWalkable || closedList.Contains(node))
+                {
+                    continue;
+                }
 
                 int tentativeGCost = currentNode.gCost + CalculateDistanceBetweenNodes(currentNode, node);
 
                 if (node.gCost > tentativeGCost)
                 {
                     node.gCost = tentativeGCost;
+                    node.hCost = CalculateDistanceBetweenNodes(node, endNode);
                     node.parentNode = currentNode;
-                    openList.Add(node);
+
+                    nodeHeap.Add(node);
+                    
                 }
             }
         }
@@ -142,9 +212,9 @@ public class Pathfinder : MonoBehaviour
     {
         Node lowestFCostNode = nodes[0];
 
-        for(int i = 1; i < nodes.Count; i++)
+        for (int i = 1; i < nodes.Count; i++)
         {
-            if(lowestFCostNode.fCost > nodes[i].fCost)
+            if (lowestFCostNode.fCost > nodes[i].fCost)
             {
                 lowestFCostNode = nodes[i];
             }
@@ -163,7 +233,7 @@ public class Pathfinder : MonoBehaviour
         return Mathf.Min(xDiff, yDiff) * 14 + remaining * 10;
     }
 
-    private void RetracePath(Node startNode,Node endNode)
+    private void RetracePath(Node startNode, Node endNode)
     {
         List<Node> path = new List<Node>();
         Node currentNode = endNode;

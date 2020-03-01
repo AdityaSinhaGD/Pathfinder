@@ -20,9 +20,11 @@ public class Pathfinder : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //FindPathWithBFS(seeker.position, target.position);
+            FindPathWithBFS(seeker.position, target.position);
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
             FindPathWithAStar(seeker.position, target.position);
-            //FindPathWithAStarHeapTech(seeker.position, target.position);
         }
 
     }
@@ -32,10 +34,11 @@ public class Pathfinder : MonoBehaviour
         Node startNode = grid.GetNodeFromWorldPosition(startPos);
         Node endNode = grid.GetNodeFromWorldPosition(endPos);
 
-        List<Node> exploredSet = new List<Node>();
+        HashSet<Node> exploredSet = new HashSet<Node>();
         Queue<Node> queue = new Queue<Node>();
 
         queue.Enqueue(startNode);
+        exploredSet.Add(startNode);
 
         while (queue.Count > 0)
         {
@@ -58,6 +61,7 @@ public class Pathfinder : MonoBehaviour
                     queue.Enqueue(node);
                 }
             }
+
         }
     }
 
@@ -66,10 +70,11 @@ public class Pathfinder : MonoBehaviour
         Node startNode = grid.GetNodeFromWorldPosition(startPos);
         Node endNode = grid.GetNodeFromWorldPosition(endPos);
 
-        List<Node> exploredSet = new List<Node>();
+        HashSet<Node> exploredSet = new HashSet<Node>();
         Stack<Node> stack = new Stack<Node>();
 
         stack.Push(startNode);
+        exploredSet.Add(startNode);
 
         while (stack.Count > 0)
         {
@@ -106,17 +111,16 @@ public class Pathfinder : MonoBehaviour
         List<Node> openList = new List<Node>();
         List<Node> closedList = new List<Node>();
 
-        openList.Add(startNode);
-
         grid.SetInitialGCostForGrid();
 
+        openList.Add(startNode);
+
         startNode.gCost = 0;
+        startNode.hCost = CalculateDistanceBetweenNodes(startNode, endNode);
 
         while (openList.Count > 0)
         {
             Node currentNode = GetNodeWithMinimumFCost(openList);
-
-            closedList.Add(currentNode);
 
             if (currentNode == endNode)
             {
@@ -139,7 +143,7 @@ public class Pathfinder : MonoBehaviour
 
                 int tentativeGCost = currentNode.gCost + CalculateDistanceBetweenNodes(currentNode, node);
 
-                if (node.gCost > tentativeGCost || !openList.Contains(node))
+                if (node.gCost > tentativeGCost)
                 {
                     node.gCost = tentativeGCost;
                     node.hCost = CalculateDistanceBetweenNodes(node, endNode);
@@ -152,59 +156,8 @@ public class Pathfinder : MonoBehaviour
 
                 }
             }
-        }
-    }
-
-    private void FindPathWithAStarHeapTech(Vector3 startPos, Vector3 endPos)
-    {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-
-        Node startNode = grid.GetNodeFromWorldPosition(startPos);
-        Node endNode = grid.GetNodeFromWorldPosition(endPos);
-
-        Heap nodeHeap = new Heap(grid.gridMaxSize);
-        List<Node> closedList = new List<Node>();
-
-        nodeHeap.Add(startNode);
-        grid.SetInitialGCostForGrid();
-        startNode.gCost = 0;
-
-        while (nodeHeap.noOfElementsInHeap > 0)
-        {
-            Node currentNode = nodeHeap.Remove();
 
             closedList.Add(currentNode);
-
-            if (currentNode == endNode)
-            {
-                stopwatch.Stop();
-                print("Path Found:" + stopwatch.ElapsedMilliseconds + "ms");
-                RetracePath(startNode, endNode);
-                return;
-            }
-
-            List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
-
-            foreach (Node node in neighbouringNodes)
-            {
-                if (!node.isWalkable || closedList.Contains(node))
-                {
-                    continue;
-                }
-
-                int tentativeGCost = currentNode.gCost + CalculateDistanceBetweenNodes(currentNode, node);
-
-                if (node.gCost > tentativeGCost)
-                {
-                    node.gCost = tentativeGCost;
-                    node.hCost = CalculateDistanceBetweenNodes(node, endNode);
-                    node.parentNode = currentNode;
-
-                    nodeHeap.Add(node);
-                    
-                }
-            }
         }
     }
 
@@ -245,6 +198,7 @@ public class Pathfinder : MonoBehaviour
         }
 
         path.Reverse();
+        print("path length"+path.Count);
         grid.debugPath = path;
     }
 

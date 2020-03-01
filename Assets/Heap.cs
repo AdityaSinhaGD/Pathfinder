@@ -80,7 +80,7 @@ public class Heap
                 indexToSwap = GetRightChildIndex(currentIndex);
             }
 
-            if (heap[currentIndex].fCost <= heap[indexToSwap].fCost)
+            if (heap[indexToSwap].fCost >= heap[currentIndex].fCost)
             {
                 break;
             }
@@ -108,9 +108,16 @@ public class Heap
         }
     }
 
-    public bool Contains(Node n)
+    public bool Contains(Node node)
     {
-        return Equals(heap[n.heapIndex], n);
+        for(int i = 0; i < noOfElementsInHeap; i++)
+        {
+            if (heap[i] == node)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void Swap(int indexNodeA,int indexNodeB)

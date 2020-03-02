@@ -20,7 +20,7 @@ public class Pathfinder : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            FindPathWithBFS(seeker.position, target.position);
+            FindPathWithAStarHeap(seeker.position, target.position);
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -113,14 +113,15 @@ public class Pathfinder : MonoBehaviour
 
         grid.SetInitialGCostForGrid();
 
-        openList.Add(startNode);
-
         startNode.gCost = 0;
         startNode.hCost = CalculateDistanceBetweenNodes(startNode, endNode);
+
+        openList.Add(startNode);
 
         while (openList.Count > 0)
         {
             Node currentNode = GetNodeWithMinimumFCost(openList);
+            openList.Remove(currentNode);
 
             if (currentNode == endNode)
             {
@@ -129,8 +130,6 @@ public class Pathfinder : MonoBehaviour
                 RetracePath(startNode, endNode);
                 return;
             }
-
-            openList.Remove(currentNode);
 
             List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
 
@@ -156,9 +155,66 @@ public class Pathfinder : MonoBehaviour
 
                 }
             }
-
             closedList.Add(currentNode);
         }
+    }
+
+    private void FindPathWithAStarHeap(Vector3 startPos,Vector3 endPos)
+    {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        Node startNode = grid.GetNodeFromWorldPosition(startPos);
+        Node endNode = grid.GetNodeFromWorldPosition(endPos);
+
+        Heap openList = new Heap(grid.gridMaxSize);
+        List<Node> closedList = new List<Node>();
+
+        grid.SetInitialGCostForGrid();
+
+        startNode.gCost = 0;
+        startNode.hCost = CalculateDistanceBetweenNodes(startNode, endNode);
+
+        openList.Add(startNode);
+
+        while (openList.noOfElementsInHeap > 0)
+        {
+            Node currentNode = openList.Remove();
+
+            if (currentNode == endNode)
+            {
+                stopwatch.Stop();
+                print("Path Found(Heap):" + stopwatch.ElapsedMilliseconds + "ms");
+                RetracePath(startNode, endNode);
+                return;
+            }
+
+            List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
+
+            foreach(Node node in neighbouringNodes)
+            {
+                if (!node.isWalkable || closedList.Contains(node))
+                {
+                    continue;
+                }
+
+                int tentativeGCost = CalculateDistanceBetweenNodes(currentNode, node);
+
+                if (node.gCost > tentativeGCost)
+                {
+                    node.gCost = tentativeGCost;
+                    node.hCost = CalculateDistanceBetweenNodes(node, endNode);
+                    node.parentNode = currentNode;
+
+                    if (!openList.Contains(node))
+                    {
+                        openList.Add(node);
+                    }
+                }
+            }
+            closedList.Add(currentNode);
+        }
+
     }
 
     private Node GetNodeWithMinimumFCost(List<Node> nodes)

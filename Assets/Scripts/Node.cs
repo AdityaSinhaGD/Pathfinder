@@ -29,5 +29,7 @@ public class Node
             return gCost + hCost;
         }
     }
+
+    public int heapIndex;
     #endregion
 }

@@ -56,6 +56,7 @@ public class Heap
     public void Add(Node node)
     {
         heap[noOfElementsInHeap] = node;
+        node.heapIndex = noOfElementsInHeap;//optional
         noOfElementsInHeap++;
         SortUp();
     }
@@ -64,6 +65,7 @@ public class Heap
     {
         Node nodeOut = heap[0];
         heap[0] = heap[noOfElementsInHeap - 1];
+        heap[0].heapIndex = 0;//optional
         noOfElementsInHeap--;
         SortDown();
         return nodeOut;

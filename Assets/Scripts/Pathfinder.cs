@@ -26,6 +26,10 @@ public class Pathfinder : MonoBehaviour
         {
             FindPathWithAStar(seeker.position, target.position);
         }
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            FindPathWithBFS(seeker.position, target.position);
+        }
 
     }
 

@@ -33,6 +33,7 @@ public class Grid : MonoBehaviour
         grid = new Node[gridSizeX, gridSizeY];
 
         CreateGrid();
+        GameManager.Instance.gameState = GameManager.GameState.isPlaying;
     }
 
     private void CreateGrid()

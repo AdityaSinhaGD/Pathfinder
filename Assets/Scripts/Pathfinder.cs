@@ -5,8 +5,23 @@ using System.Diagnostics;
 
 public class Pathfinder : MonoBehaviour
 {
+    private static Pathfinder instance;
+    public static Pathfinder Instance
+    {
+        get
+        {
+            return instance;
+        }
+        private set
+        {
+            instance = value;
+        }
+    }
 
-    public Transform seeker, target;
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private Grid grid;
     // Start is called before the first frame update
@@ -15,25 +30,7 @@ public class Pathfinder : MonoBehaviour
         grid = GetComponent<Grid>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            FindPathWithAStarHeap(seeker.position, target.position);
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            FindPathWithAStar(seeker.position, target.position);
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            FindPathWithBFS(seeker.position, target.position);
-        }
-
-    }
-
-    private void FindPathWithBFS(Vector3 startPos, Vector3 endPos)
+    public List<Node> FindPathWithBFS(Vector3 startPos, Vector3 endPos)
     {
         Node startNode = grid.GetNodeFromWorldPosition(startPos);
         Node endNode = grid.GetNodeFromWorldPosition(endPos);
@@ -50,8 +47,7 @@ public class Pathfinder : MonoBehaviour
 
             if (currentNode == endNode)
             {
-                RetracePath(startNode, endNode);
-                return;
+                return RetracePath(startNode, endNode);
             }
 
             List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
@@ -67,9 +63,10 @@ public class Pathfinder : MonoBehaviour
             }
 
         }
+        return null;
     }
 
-    private void FindPathWithDFS(Vector3 startPos, Vector3 endPos)
+    public List<Node> FindPathWithDFS(Vector3 startPos, Vector3 endPos)
     {
         Node startNode = grid.GetNodeFromWorldPosition(startPos);
         Node endNode = grid.GetNodeFromWorldPosition(endPos);
@@ -86,8 +83,7 @@ public class Pathfinder : MonoBehaviour
 
             if (currentNode == endNode)
             {
-                RetracePath(startNode, endNode);
-                return;
+                return RetracePath(startNode, endNode);
             }
 
             List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
@@ -102,9 +98,10 @@ public class Pathfinder : MonoBehaviour
                 }
             }
         }
+        return null;
     }
 
-    private void FindPathWithAStar(Vector3 startPos, Vector3 endPos)
+    public List<Node> FindPathWithAStar(Vector3 startPos, Vector3 endPos)
     {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -130,9 +127,8 @@ public class Pathfinder : MonoBehaviour
             if (currentNode == endNode)
             {
                 stopwatch.Stop();
-                print("Path Found:" + stopwatch.ElapsedMilliseconds + "ms");
-                RetracePath(startNode, endNode);
-                return;
+                print("Path Found(normal):" + stopwatch.ElapsedMilliseconds + "ms");
+                return RetracePath(startNode, endNode);
             }
 
             List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
@@ -161,9 +157,11 @@ public class Pathfinder : MonoBehaviour
             }
             closedList.Add(currentNode);
         }
+
+        return null;
     }
 
-    private void FindPathWithAStarHeap(Vector3 startPos,Vector3 endPos)
+    public List<Node> FindPathWithAStarHeap(Vector3 startPos,Vector3 endPos)
     {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -189,8 +187,7 @@ public class Pathfinder : MonoBehaviour
             {
                 stopwatch.Stop();
                 print("Path Found(Heap):" + stopwatch.ElapsedMilliseconds + "ms");
-                RetracePath(startNode, endNode);
-                return;
+                return RetracePath(startNode, endNode);
             }
 
             List<Node> neighbouringNodes = grid.GetNeighbouringNodes(currentNode);
@@ -216,9 +213,11 @@ public class Pathfinder : MonoBehaviour
                     }
                 }
             }
+
             closedList.Add(currentNode);
         }
 
+        return null;
     }
 
     private Node GetNodeWithMinimumFCost(List<Node> nodes)
@@ -246,7 +245,7 @@ public class Pathfinder : MonoBehaviour
         return Mathf.Min(xDiff, yDiff) * 14 + remaining * 10;
     }
 
-    private void RetracePath(Node startNode, Node endNode)
+    private List<Node> RetracePath(Node startNode, Node endNode)
     {
         List<Node> path = new List<Node>();
         Node currentNode = endNode;
@@ -260,6 +259,7 @@ public class Pathfinder : MonoBehaviour
         path.Reverse();
         print("path length"+path.Count);
         grid.debugPath = path;
+        return path;
     }
 
 }

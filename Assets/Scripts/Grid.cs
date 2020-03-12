@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
+    private static Grid instance;
+    public static Grid Instance
+    {
+        get
+        {
+            return instance;
+        }
+        private set
+        {
+            instance = value;
+        }
+    }
+
     public Vector2 gridWorldSize;
     public float nodeRadius = 0.5f;
     public Node[,] grid;
@@ -33,6 +46,7 @@ public class Grid : MonoBehaviour
         grid = new Node[gridSizeX, gridSizeY];
 
         CreateGrid();
+        instance = this;
         GameManager.Instance.gameState = GameManager.GameState.isPlaying;
     }
 

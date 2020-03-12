@@ -502,7 +502,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &810246579
 Transform:
   m_ObjectHideFlags: 0
@@ -561,11 +561,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc24423af05bd47b19eb02a41fd62f5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameState: 0
   pathfinder: {fileID: 7590229783572099378, guid: 679f337e456ac4d058616097448a7c11,
     type: 3}
-  turretPrefab: {fileID: 1890904445400365393, guid: d0e61f26bae1c4de19b99f15a44f97ee,
-    type: 3}
-  noOfAllowedTurrets: 3
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,8 +640,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: -0.44328344, y: -0.012909768, z: 0.0063849366, w: -0.8962658}
-  m_LocalPosition: {x: 2.6814513, y: 31.3279, z: -23.568169}
+  m_LocalRotation: {x: 0.70710677, y: 0.0000000018626449, z: -0.0000000018626449,
+    w: 0.7071068}
+  m_LocalPosition: {x: 1.7865107, y: 89.541504, z: -0.0000020772961}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -699,7 +698,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 5668769291c984c91a1d5a80ed8f9cc8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1526,11 +1525,47 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Parameters.colorGradient.atime1
+      value: 57825
+      objectReference: {fileID: 0}
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Parameters.colorGradient.atime0
+      value: 37201
+      objectReference: {fileID: 0}
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.r
+      value: 0.03137256
+      objectReference: {fileID: 0}
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.g
+      value: 0.954919
+      objectReference: {fileID: 0}
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.b
+      value: 0.99215686
+      objectReference: {fileID: 0}
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.r
+      value: 0.03137255
+      objectReference: {fileID: 0}
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.g
+      value: 0.95686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.b
+      value: 0.99215686
+      objectReference: {fileID: 0}
+    - target: {fileID: 2094798297, guid: c633a0164d5eb406187cebcd441ed422, type: 3}
+      propertyPath: m_Time
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 6573764457356788935, guid: c633a0164d5eb406187cebcd441ed422,
         type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 810246579}
+      propertyPath: moveSpeed
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 6573764457356788936, guid: c633a0164d5eb406187cebcd441ed422,
         type: 3}
       propertyPath: m_LocalPosition.x
